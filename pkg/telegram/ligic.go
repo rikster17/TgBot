@@ -1,13 +1,16 @@
 package telegram
 
 import (
+	"fmt"
 	tgbotapi "github.com/go-telegram-bot-api/telegram-bot-api/v5"
 	"log"
+	"time"
 )
 
 const (
 	commandStart = "start"
 	commandHelp  = "help"
+	commandTime  = "time"
 )
 
 func (b *Bot) handleUpdates(updates tgbotapi.UpdatesChannel) {
@@ -40,12 +43,31 @@ func (b *Bot) HandleCommand(message *tgbotapi.Message) {
 
 	switch message.Command() {
 	case commandStart:
-		msg.Text = "Welcome this is my first bot"
-		b.bot.Send(msg)
+		b.HandleCommandStart(message)
 	case commandHelp:
-		msg.Text = "/start - start ToDo_Bot"
-		b.bot.Send(msg)
+		b.HandleCommandHelp(message)
+	case commandTime:
+		b.HandleTime(message)
 	default:
 		b.bot.Send(msg)
 	}
+}
+
+func (b *Bot) HandleCommandStart(message *tgbotapi.Message) {
+	msg := tgbotapi.NewMessage(message.Chat.ID, "Welcome this is my first bot")
+	b.bot.Send(msg)
+}
+
+func (b *Bot) HandleCommandHelp(message *tgbotapi.Message) {
+	startInfo := fmt.Sprintf("/%s - start ToDo_Bot\n", commandStart)
+	timeInfo := fmt.Sprintf("/%s - shows you current time +6", commandTime)
+	msg := tgbotapi.NewMessage(message.Chat.ID, fmt.Sprint(startInfo, timeInfo))
+	b.bot.Send(msg)
+}
+
+func (b *Bot) HandleTime(message *tgbotapi.Message) {
+	dt := time.Now()
+
+	msg := tgbotapi.NewMessage(message.Chat.ID, fmt.Sprintf("Your time is = %s", dt.Format(time.RFC1123)))
+	b.bot.Send(msg)
 }
