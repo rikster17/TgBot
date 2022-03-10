@@ -2,15 +2,17 @@ package telegram
 
 import (
 	"fmt"
-	tgbotapi "github.com/go-telegram-bot-api/telegram-bot-api/v5"
 	"log"
 	"time"
+
+	tgbotapi "github.com/go-telegram-bot-api/telegram-bot-api/v5"
 )
 
 const (
-	commandStart = "start"
-	commandHelp  = "help"
-	commandTime  = "time"
+	commandStart            = "start"
+	commandHelp             = "help"
+	commandTime             = "time"
+	commandFindTrackSpotify = "fmusic"
 )
 
 func (b *Bot) handleUpdates(updates tgbotapi.UpdatesChannel) {
@@ -21,12 +23,11 @@ func (b *Bot) handleUpdates(updates tgbotapi.UpdatesChannel) {
 		msg := tgbotapi.NewMessage(update.Message.Chat.ID, update.Message.Text)
 		//msg.ReplyToMessageID = update.Message.MessageID
 
-		b.bot.Send(msg)
-
 		if update.Message.IsCommand() {
 			b.HandleCommand(update.Message)
 			continue
 		}
+		b.bot.Send(msg)
 	}
 }
 
@@ -48,6 +49,8 @@ func (b *Bot) HandleCommand(message *tgbotapi.Message) {
 		b.HandleCommandHelp(message)
 	case commandTime:
 		b.HandleTime(message)
+	case commandFindTrackSpotify:
+		b.HandleFindTrack(message)
 	default:
 		b.bot.Send(msg)
 	}
@@ -60,8 +63,9 @@ func (b *Bot) HandleCommandStart(message *tgbotapi.Message) {
 
 func (b *Bot) HandleCommandHelp(message *tgbotapi.Message) {
 	startInfo := fmt.Sprintf("/%s - start ToDo_Bot\n", commandStart)
-	timeInfo := fmt.Sprintf("/%s - shows you current time +6", commandTime)
-	msg := tgbotapi.NewMessage(message.Chat.ID, fmt.Sprint(startInfo, timeInfo))
+	timeInfo := fmt.Sprintf("/%s - shows you current time +6\n", commandTime)
+	findTrackInfo := fmt.Sprintf("/%s - find track by name", commandFindTrackSpotify)
+	msg := tgbotapi.NewMessage(message.Chat.ID, fmt.Sprint(startInfo, timeInfo, findTrackInfo))
 	b.bot.Send(msg)
 }
 
@@ -69,5 +73,13 @@ func (b *Bot) HandleTime(message *tgbotapi.Message) {
 	dt := time.Now()
 
 	msg := tgbotapi.NewMessage(message.Chat.ID, fmt.Sprintf("Your time is = %s", dt.Format(time.RFC1123)))
+	b.bot.Send(msg)
+}
+
+func (b *Bot) HandleFindTrack(message *tgbotapi.Message) {
+	name := "Cut To The Felling"
+	link := "1C2Z38VZAbnIgSYsGas603?highlight=spotify:track:3WcXtp5oK6oSKq4d38oTBa"
+	linkMusic := fmt.Sprintf("Track is: %s https://open.spotify.com/album/%s", name, link)
+	msg := tgbotapi.NewMessage(message.Chat.ID, fmt.Sprintf(linkMusic))
 	b.bot.Send(msg)
 }
