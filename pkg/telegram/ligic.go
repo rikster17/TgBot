@@ -12,7 +12,9 @@ const (
 	commandStart            = "start"
 	commandHelp             = "help"
 	commandTime             = "time"
+	commandMyName           = "myname"
 	commandFindTrackSpotify = "fmusic"
+	spotifyURL              = "https://open.spotify.com/"
 )
 
 func (b *Bot) handleUpdates(updates tgbotapi.UpdatesChannel) {
@@ -51,6 +53,8 @@ func (b *Bot) HandleCommand(message *tgbotapi.Message) {
 		b.HandleTime(message)
 	case commandFindTrackSpotify:
 		b.HandleFindTrack(message)
+	case commandMyName:
+		b.HandleYourName(message)
 	default:
 		b.bot.Send(msg)
 	}
@@ -64,8 +68,9 @@ func (b *Bot) HandleCommandStart(message *tgbotapi.Message) {
 func (b *Bot) HandleCommandHelp(message *tgbotapi.Message) {
 	startInfo := fmt.Sprintf("/%s - start ToDo_Bot\n", commandStart)
 	timeInfo := fmt.Sprintf("/%s - shows you current time +6\n", commandTime)
+	mynameInfo := fmt.Sprintf("/%s - shows your nickname\n", commandMyName)
 	findTrackInfo := fmt.Sprintf("/%s - find track by name", commandFindTrackSpotify)
-	msg := tgbotapi.NewMessage(message.Chat.ID, fmt.Sprint(startInfo, timeInfo, findTrackInfo))
+	msg := tgbotapi.NewMessage(message.Chat.ID, fmt.Sprint(startInfo, timeInfo, mynameInfo, findTrackInfo))
 	b.bot.Send(msg)
 }
 
@@ -76,10 +81,14 @@ func (b *Bot) HandleTime(message *tgbotapi.Message) {
 	b.bot.Send(msg)
 }
 
+func (b *Bot) HandleYourName(message *tgbotapi.Message) {
+	msg := tgbotapi.NewMessage(message.Chat.ID, message.From.String())
+
+	b.bot.Send(msg)
+}
+
 func (b *Bot) HandleFindTrack(message *tgbotapi.Message) {
-	name := "Cut To The Felling"
-	link := "1C2Z38VZAbnIgSYsGas603?highlight=spotify:track:3WcXtp5oK6oSKq4d38oTBa"
-	linkMusic := fmt.Sprintf("Track is: %s https://open.spotify.com/album/%s", name, link)
-	msg := tgbotapi.NewMessage(message.Chat.ID, fmt.Sprintf(linkMusic))
+	msg := tgbotapi.NewMessage(message.Chat.ID, "find music command")
+
 	b.bot.Send(msg)
 }

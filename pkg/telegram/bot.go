@@ -1,14 +1,13 @@
 package telegram
 
 import (
-	tgbotapi "github.com/go-telegram-bot-api/telegram-bot-api/v5"
-	"github.com/zmb3/spotify"
 	"log"
+
+	tgbotapi "github.com/go-telegram-bot-api/telegram-bot-api/v5"
 )
 
 type Bot struct {
-	bot            *tgbotapi.BotAPI
-	spotifyTracker *spotify.FullTrack
+	bot *tgbotapi.BotAPI
 }
 
 func NewBot(bot *tgbotapi.BotAPI) *Bot {
