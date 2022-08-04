@@ -51,10 +51,10 @@ func (b *Bot) HandleCommand(message *tgbotapi.Message) {
 		b.HandleCommandHelp(message)
 	case commandTime:
 		b.HandleTime(message)
-	case commandFindTrackSpotify:
-		b.HandleFindTrack(message)
 	case commandMyName:
 		b.HandleYourName(message)
+	case commandFindTrackSpotify:
+		b.HandleFindTrack(message)
 	default:
 		b.bot.Send(msg)
 	}
@@ -88,7 +88,7 @@ func (b *Bot) HandleYourName(message *tgbotapi.Message) {
 }
 
 func (b *Bot) HandleFindTrack(message *tgbotapi.Message) {
-	msg := tgbotapi.NewMessage(message.Chat.ID, "find music command")
+	msg := tgbotapi.NewMessage(message.Chat.ID, fmt.Sprintf("This is your track"))
 
 	b.bot.Send(msg)
 }
