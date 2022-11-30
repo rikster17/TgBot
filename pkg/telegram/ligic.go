@@ -88,7 +88,8 @@ func (b *Bot) HandleYourName(message *tgbotapi.Message) {
 }
 
 func (b *Bot) HandleFindTrack(message *tgbotapi.Message) {
-	msg := tgbotapi.NewMessage(message.Chat.ID, fmt.Sprintf("This is your track"))
+	msg := tgbotapi.NewMessage(message.Chat.ID, fmt.Sprintf("This is your album - https://open.spotify.com/album/0sNOF9WDwhWunNAHPD3Baj"))
 
 	b.bot.Send(msg)
 }
+
